@@ -21,14 +21,16 @@ export default function Home() {
   const [search, setSearch] = useState("");
 
   useEffect(() => {
-    let q = search.toLowerCase();
-    setGroups(
-      data["ValidatorGroups"].filter(
-        (vg) =>
-          vg.name.toLowerCase().includes(q) ||
-          vg.address.toLowerCase().includes(q)
-      )
-    );
+    if (data) {
+      let q = search.toLowerCase();
+      setGroups(
+        data["ValidatorGroups"]?.filter(
+          (vg) =>
+            vg.name.toLowerCase().includes(q) ||
+            vg.address.toLowerCase().includes(q)
+        )
+      );
+    }
   }, [search]);
 
   useEffect(() => {
@@ -61,7 +63,7 @@ export default function Home() {
           <Code>{JSON.stringify(data, null, 2)}</Code>
         </pre>
       </Box> */}
-      <SimpleGrid columns={1} spacing={4} mt={6}>
+      <SimpleGrid columns={1} spacing={4} my={6}>
         {!fetching ? (
           groups.map((vg) => (
             <NxLink href={`/vg/${vg.address}`} style={{ cursor: "pointer" }}>
