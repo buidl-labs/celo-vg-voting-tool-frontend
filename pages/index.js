@@ -1,52 +1,22 @@
 import React, { useEffect } from "react";
 import Head from "next/head";
+import NxLink from "next/link";
 import {
   Container,
   Box,
+  SimpleGrid,
   InputGroup,
   Input,
   InputLeftElement,
-  Code,
+  Heading,
+  Link,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import Nav from "../components/NavBar";
-import { useQuery } from "urql";
-
-const VG_Query = `
-  query{
-    ValidatorGroups {
-      name
-      website_url
-      address
-    
-      validators {
-        name
-        stats{
-          last_elected
-          attestations_requested
-          attenstations_fulfilled
-          score
-        } 
-      }
-      stats{
-        epoch_num
-        votes
-        locked_gold
-        voting_cap
-        reward_ratio
-        group_share
-        attestation_percentage
-      }
-    }
-  }
-`;
+import useValidatorGroup from "../hooks/useValidatorGroup";
 
 export default function Home() {
-  const [result, _] = useQuery({
-    query: VG_Query,
-  });
-
-  const { data, fetching, error } = result;
+  const { data, fetching, error } = useValidatorGroup();
 
   useEffect(() => {
     console.log(data);
@@ -54,25 +24,61 @@ export default function Home() {
     console.log(error);
   }, [data, fetching, error]);
   return (
-    <Container style={{ minHeight: "100vh" }}>
+    <Container style={{ minHeight: "100vh" }} maxW="container.md">
       <Head>
         <title>Celo Voting Tool</title>
       </Head>
       <Nav />
-      <InputGroup>
+      <InputGroup mt={4}>
         <InputLeftElement
           pointerEvents="none"
           children={<SearchIcon color="gray.400" />}
         />
         <Input placeholder="Search Validator Group by name or address" />
       </InputGroup>
-      <Box>
-        <Code>{fetching}</Code>
-        <Code>{error}</Code>
+      {/* <Box>
+        <Code>{JSON.stringify(fetching)}</Code>
+        <Code>{JSON.stringify(error)}</Code>
         <pre>
           <Code>{JSON.stringify(data, null, 2)}</Code>
         </pre>
-      </Box>
+      </Box> */}
+      <SimpleGrid columns={1} spacing={4} mt={6}>
+        {!fetching ? (
+          data["ValidatorGroups"].map((vg) => (
+            <NxLink href={`/vg/${vg.address}`} style={{ cursor: "pointer" }}>
+              <Box
+                borderWidth="1.4px"
+                borderRadius="md"
+                px={4}
+                py={6}
+                boxShadow="sm"
+                transition="all .3s ease"
+                _hover={{
+                  background: "yellow.100",
+                  transform: "translateY(-1.5px)",
+                  borderColor: "green.400",
+                  boxShadow: "lg",
+                }}
+              >
+                {vg.name && <Heading size="sm">{vg.name}</Heading>}
+                <Heading size="xs" mt={1}>
+                  <Link
+                    isExternal
+                    href={`https://explorer.celo.org/address/${vg.address}/celo`}
+                    color="green.600"
+                    fontWeight="500"
+                  >
+                    {vg.address}
+                  </Link>
+                </Heading>
+              </Box>
+            </NxLink>
+          ))
+        ) : (
+          <div>Loading</div>
+        )}
+      </SimpleGrid>
     </Container>
   );
 }
