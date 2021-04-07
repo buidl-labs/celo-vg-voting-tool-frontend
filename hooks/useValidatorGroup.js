@@ -9,7 +9,9 @@ const VG_Query = `
     
       validators {
         name
+        address
         stats{
+          epoch_num
           last_elected
           attestations_requested
           attenstations_fulfilled
