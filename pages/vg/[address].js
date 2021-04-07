@@ -66,11 +66,11 @@ const ValidatorGroup = () => {
               </Box>
             )}
 
-            <Box borderWidth="1.4px" borderRadius="md" px={3} py={6} mt={4}>
+            <Box borderRadius="md" py={6} mt={4}>
               <Heading size="md">Validator Group Stats</Heading>
               <UnorderedList mt={3}>
                 <ListItem>
-                  <Text>
+                  <Text fontSize="lg">
                     Locked Gold -{" "}
                     {(parseInt(VGStats.locked_gold) / Math.pow(10, 18)).toFixed(
                       2
@@ -78,13 +78,13 @@ const ValidatorGroup = () => {
                   </Text>
                 </ListItem>
                 <ListItem>
-                  <Text>
+                  <Text fontSize="lg">
                     Votes received -{" "}
                     {(parseInt(VGStats.votes) / Math.pow(10, 18)).toFixed(2)}
                   </Text>
                 </ListItem>
                 <ListItem>
-                  <Text>
+                  <Text fontSize="lg">
                     Votes left -{" "}
                     {(parseInt(VGStats.voting_cap) / Math.pow(10, 18)).toFixed(
                       2
@@ -104,15 +104,17 @@ const ValidatorGroup = () => {
 
                     return (
                       <Box
-                        borderWidth="2px"
-                        px={2}
+                        borderWidth="1.5px"
+                        px={4}
                         py={4}
                         borderRadius="md"
                         borderColor={currentlyElected ? "green.400" : "red.400"}
-                        boxShadow="xs"
+                        boxShadow="sm"
                       >
-                        <Text>{v.address}</Text>
-                        {v.name && <Text>{v.name}</Text>}
+                        <Text fontSize="lg" fontWeight="bold">
+                          {v.address}
+                        </Text>
+                        {v.name && <Text fontSize="lg">{v.name}</Text>}
 
                         {currentlyElected ? (
                           <Box mt={2}>

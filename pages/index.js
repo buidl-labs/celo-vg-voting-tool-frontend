@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import Head from "next/head";
 import NxLink from "next/link";
 import {
@@ -9,7 +9,7 @@ import {
   Input,
   InputLeftElement,
   Heading,
-  Link,
+  Text,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import Nav from "../components/NavBar";
@@ -17,12 +17,26 @@ import useValidatorGroup from "../hooks/useValidatorGroup";
 
 export default function Home() {
   const { data, fetching, error } = useValidatorGroup();
+  const [groups, setGroups] = useState([]);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
-    console.log(data);
-    console.log(fetching);
-    console.log(error);
+    let q = search.toLowerCase();
+    setGroups(
+      data["ValidatorGroups"].filter(
+        (vg) =>
+          vg.name.toLowerCase().includes(q) ||
+          vg.address.toLowerCase().includes(q)
+      )
+    );
+  }, [search]);
+
+  useEffect(() => {
+    if (!fetching) {
+      setGroups(data["ValidatorGroups"]);
+    }
   }, [data, fetching, error]);
+
   return (
     <Container style={{ minHeight: "100vh" }} maxW="container.md">
       <Head>
@@ -34,7 +48,11 @@ export default function Home() {
           pointerEvents="none"
           children={<SearchIcon color="gray.400" />}
         />
-        <Input placeholder="Search Validator Group by name or address" />
+        <Input
+          placeholder="Search Validator Group by name or address"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
       </InputGroup>
       {/* <Box>
         <Code>{JSON.stringify(fetching)}</Code>
@@ -45,7 +63,7 @@ export default function Home() {
       </Box> */}
       <SimpleGrid columns={1} spacing={4} mt={6}>
         {!fetching ? (
-          data["ValidatorGroups"].map((vg) => (
+          groups.map((vg) => (
             <NxLink href={`/vg/${vg.address}`} style={{ cursor: "pointer" }}>
               <Box
                 borderWidth="1.4px"
@@ -63,14 +81,9 @@ export default function Home() {
               >
                 {vg.name && <Heading size="sm">{vg.name}</Heading>}
                 <Heading size="xs" mt={1}>
-                  <Link
-                    isExternal
-                    href={`https://explorer.celo.org/address/${vg.address}/celo`}
-                    color="green.600"
-                    fontWeight="500"
-                  >
+                  <Text color="green.600" fontWeight="500">
                     {vg.address}
-                  </Link>
+                  </Text>
                 </Heading>
               </Box>
             </NxLink>
