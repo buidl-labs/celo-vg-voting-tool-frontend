@@ -2,7 +2,7 @@ import { ChakraProvider } from "@chakra-ui/react";
 import { createClient, Provider } from "urql";
 
 const client = createClient({
-  url: "http://localhost:8080/query",
+  url: "https://celo-tool-backend.onrender.com/query",
 });
 
 function MyApp({ Component, pageProps }) {
