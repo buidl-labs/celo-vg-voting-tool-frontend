@@ -10,6 +10,7 @@ import {
   InputLeftElement,
   Heading,
   Text,
+  Skeleton,
 } from "@chakra-ui/react";
 import { SearchIcon } from "@chakra-ui/icons";
 import Nav from "../components/NavBar";
@@ -63,10 +64,15 @@ export default function Home() {
           <Code>{JSON.stringify(data, null, 2)}</Code>
         </pre>
       </Box> */}
-      <SimpleGrid columns={1} spacing={4} my={6}>
-        {!fetching ? (
-          groups.map((vg) => (
-            <NxLink href={`/vg/${vg.address}`} style={{ cursor: "pointer" }}>
+
+      {!fetching ? (
+        <SimpleGrid columns={1} spacing={4} my={6}>
+          {groups.map((vg) => (
+            <NxLink
+              href={`/vg/${vg.address}`}
+              style={{ cursor: "pointer" }}
+              key={vg.address}
+            >
               <Box
                 borderWidth="1.4px"
                 borderRadius="md"
@@ -89,11 +95,15 @@ export default function Home() {
                 </Heading>
               </Box>
             </NxLink>
-          ))
-        ) : (
-          <div>Loading</div>
-        )}
-      </SimpleGrid>
+          ))}
+        </SimpleGrid>
+      ) : (
+        <SimpleGrid columns={1} spacing={4} my={6}>
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((i) => (
+            <Skeleton height="50px" key={i} />
+          ))}
+        </SimpleGrid>
+      )}
     </Container>
   );
 }

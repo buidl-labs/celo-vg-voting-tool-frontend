@@ -110,6 +110,7 @@ const ValidatorGroup = () => {
                         borderRadius="md"
                         borderColor={currentlyElected ? "green.400" : "red.400"}
                         boxShadow="sm"
+                        key={v.address}
                       >
                         <Text fontSize="lg" fontWeight="bold">
                           {v.address}
